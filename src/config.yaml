@@ -1,0 +1,10 @@
+Pendulums:
+  Double: true
+  Single: false
+
+
+NeuralNetwork:
+  Learning rate: 1e-3
+  EPOCHS: 1000
+  BATCH_SIZE: 64
+  
