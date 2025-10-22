@@ -1,52 +1,85 @@
 from pyfiglet import figlet_format
 import os
 import yaml
+from scripts.generate_training_data import generate_training_data
+from scripts.train_nn import train_neural_network
+from scripts.run_mpc_with_nn import run_mpc_with_nn
+from src.utils import load_config
 
-figlet_format("ORC Project", font="standard")
-print(figlet_format("ORC Project", font="standard"))
-print("Welcome to the ORC Project!")
-print("This is the main entry point of the application.\n")
-print("Here you can initialize and run your optimal control problems.")
-print("(please refer to the documentation for further instructions)")
+#----------------------------------------------------------------------------------------------------------------
+# DISPLAY HEADER
+#----------------------------------------------------------------------------------------------------------------
 
-#------------------------------------------------------------------------------------
-#------------------------------------ PENDULUM SELECTION ----------------------------
-#------------------------------------------------------------------------------------
+print(figlet_format("ORC Project v2.1", font="standard"))
+print("Written by Bagattini Nicola & Ballarini Luigi).\n")
+print("This is the main entry point of the application.")
+print("(please refer to the documentation/README.md file for further instructions)")
+print("-----------------------------------------------------------------------------\n")
+
+#-----------------------------------------------------------------------------------------------------------------
+# PENDULUM SELECTION
+#-----------------------------------------------------------------------------------------------------------------
+
+print(figlet_format("Pendulum selection", font="smslant"))
+
 # Load configuration from YAML file
 config_path = os.path.join("src", "config.yaml")
+
+# Ensure the config file exists
 with open(config_path, 'r') as file:
     config = yaml.load(file, Loader=yaml.FullLoader)
-
-# Set default if config is None
-if config is None:
-    config = {"Pendulums": {"Single": False, "Double": False}}
-    print("No configuration found. Using default settings.")
-
-# Prompt user in the terminal
-pendulum_input = input("Which pendulum to simulate? (Single/Double): ").strip()
-
-# Check if the config has the 'Pendulums' section
-if "Pendulums" in config:
-    # Reset all pendulum flags to False
-    for key in config["Pendulums"]:
-        config["Pendulums"][key] = False
     
-    # Update based on user input (case-insensitive)Z
-    found = False
-    for pendulum in config["Pendulums"]:
-        if pendulum.lower() == pendulum_input.lower():
-            config["Pendulums"][pendulum] = True
-            print(f"Selected pendulum: '{pendulum}'.")
-            found = True
-            break
-    if not found:
-        print(f"Pendulum '{pendulum_input}' not found in configuration.")
-else:
-    print("No 'Pendulums' section found in configuration.")
+# If Pendulums section does not exist, create it
+if "Pendulums" not in config:
+    config["Pendulums"] = {"Single": False, "Double": False}    
 
-# Save updated configuration back to the file
-with open(config_path, 'w') as file:
+# Prompt user for pendulum selection
+pendulum_input = input("Which pendulum would you like to work with? (single/double): \n").strip().lower()
+found = False   # Flag to check if a valid pendulum was selected
+
+# Update configuration based on user input
+for key in config["Pendulums"]:
+    config["Pendulums"][key] = (key.lower()==pendulum_input)
+    if config["Pendulums"][key]:
+        print(f"\nSELECTED: {key} Pendulum")
+        found = True
+# If no valid pendulum was selected, default to Single  
+if not found:
+    print(f"WARNING: Invalid pendulum type, defaulting to Single!")
+    config["Pendulums"]["Single"] =  True
+
+# Save updated configuration back to YAML file  
+with open(config_path, "w") as file:
     yaml.dump(config, file)
     
-#------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------
+# GUIDED PIPELINE EXECUTION
+#----------------------------------------------------------------------------------------------------------------
+config = load_config(config_path) # Load updated configuration
+
+# Execute each step based on user confirmation
+
+# Step 1: Generate training data
+print("\n----------------------------------------------------------------")
+if input("Step 1: Generate training data? (Y/N): ").strip().upper() == "Y":
+    generate_training_data(config)
+else:
+    print("Skipping training data generation.")
+
+# Step 2: Train neural network
+print("\n----------------------------------------------------------------")
+if input("Step 2: Train neural network? (Y/N): ").strip().upper() == "Y":
+    train_neural_network(config)
+else:
+    print("Skipping neural network training.")
+
+# Step 3: Run MPC with trained neural network
+print("\n----------------------------------------------------------------")
+if input("Step 3: Run MPC with trained NN? (Y/N)").strip().upper() == "Y":
+    run_mpc_with_nn(config)
+else:
+    print("Skipping MPC execution with neural network.")
+
+# Final message
+print("\n----------------------------------------------------------------")
+print("Pipeline execution completed. Check /plots and /results folders for outputs.")  

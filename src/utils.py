@@ -1,9 +1,27 @@
 # GENERAL PURPOSE UTILITIES
-import os, yaml
-
+import yaml
+# from src.ocp_solver import OCPSinglePendulum, OCPDoublePendulum
 
 #------------------------------------------------------------------------------------
-# 1. Define model save_path
+# 1. LOAD CONFIG FILE
+def load_config(config_path = "src/config.yaml"):
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    returwn config
+#------------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------------
+# 2. OCP SOLVER 
+#def get_ocp_solver(config, dt=0.05, u_min=-2, u_max=2):
+#    pend = config["Pendulums"]
+#    if pend.get("double", False):
+#        print("[....] Loading Double Pendulum OCP solver ... ")
+#   elif pend.get("Single", False):
+#        return OCPDoublePendulum(dt, u_min, u_max)
+#        print("[....] Loading Single Pendulum OCP solver ... ")
+#        return OCPSinglePendulum(dt, u_min, u_max)
+#    else:
+#        raise ValueError("No pendulum selected in configuration.")
 #------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------
@@ -14,25 +32,17 @@ import os, yaml
 # 3. Define plot save_path]
 #------------------------------------------------------------------------------------
 
-#------------------------------------------------------------------------------------
-# 4. Configuration load (from config.yaml)
-def load_config(config_path = "config.yaml"):
-    """
-    Load the configuration file
-    
-    Args:
-        config_path (str): Path to the configuration file (YAML format)
-    Returns:
-        config (dict): Configuration dictionary
-    """
-    with open(config_path, 'r') as file:
-        config = yaml.safe_load(file)
-    return config
-#------------------------------------------------------------------------------------
 
 
 #------------------------------------------------------------------------------------
-# 5. 
+# 5. OCP loader (Load the correct OCP class based on the config file)
+#def load_ocp(config):
+    if config["Pendulums"]["Single"]:
+        ocp = SinglePendulum_OCP(config)
+    elif config["Pendulums"]["Double"]:
+        ocp = DoublePendulum_OCP(config)
+    else:
+        raise ValueError("No valid pendulum configuration found in configuration file")
 #------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------
