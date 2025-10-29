@@ -1,10 +1,10 @@
 # Pendulum selection
 Pendulums:
-  Double: true
-  Single: false
+  double: true
+  single: false
 
 # Physical parameters
-Dynamics:
+Phys:
   l1: 1.0
   l2: 1.0
   m1: 1.0
@@ -14,14 +14,14 @@ Dynamics:
 # Neural Network parameters
 
 NeuralNetwork:
-  model_path_single: "models/SinglePendulum/SP_NN_model.pt"
-  model_path_double: "models/DoublePendulum/DP_NN_model.pt"
-  Learning rate: 1e-3
+  SP_path: "models/SinglePendulum/SP_NN_model.pt"
+  DP_path: "models/DoublePendulum/DP_NN_model.pt"
+  learning_rate: 1e-3
   EPOCHS: 1000
   BATCH_SIZE: 64
 
 # Optimal Control Problem dimensions
-ocp:
+OCP:
   horizon: 40
   dt: 0.05
   u_min: -5.0
@@ -29,7 +29,7 @@ ocp:
   WithNN: true
 
   # Dimensions auto-set depending on pendulum type
-  state_dim_single: 2
+  SP_state_dim: 2
   control_dim_single: 1
 
   state_dim_double: 4

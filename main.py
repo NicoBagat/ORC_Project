@@ -29,9 +29,9 @@ config_path = os.path.join("src", "config.yaml")
 with open(config_path, 'r') as file:
     config = yaml.load(file, Loader=yaml.FullLoader)
     
-# If Pendulums section does not exist, create it
+# If Pendulums section does not exist, create it (set Single as default)S
 if "Pendulums" not in config:
-    config["Pendulums"] = {"Single": False, "Double": False}    
+    config["Pendulums"] = {"single": True, "souble": False}    
 
 # Prompt user for pendulum selection
 pendulum_input = input("Which pendulum would you like to work with? (single/double): \n").strip().lower()
@@ -46,7 +46,7 @@ for key in config["Pendulums"]:
 # If no valid pendulum was selected, default to Single  
 if not found:
     print(f"WARNING: Invalid pendulum type, defaulting to Single!")
-    config["Pendulums"]["Single"] =  True
+    config["Pendulums"]["single"] =  True
 
 # Save updated configuration back to YAML file  
 with open(config_path, "w") as file:
