@@ -19,6 +19,7 @@ NeuralNetwork:
   learning_rate: 1e-3
   EPOCHS: 1000
   BATCH_SIZE: 64
+  hidden_size: 64
 
 # Optimal Control Problem dimensions
 OCP:

@@ -1,30 +1,34 @@
+# EXTERNAL IMPORTS
 import casadi as ca
 
+# LOCAL IMPORTS
 from utils.py import load_config    
 
+# Load from configuration file
+config = load_config() 
+
 # --------------------------------------------------------------------------------
-# Single Pendulum Cost Functions
+# SINGLE PENDULUM
 # --------------------------------------------------------------------------------
-# STAGE COST
-def stage_cost_SP(x, u, q_target):
+# Stage cost (quadratic cost)
+
+def stage_cost_SP(x, u):
     '''
     Quadratic cost for single pendulum
     '''
-    config = load_config()
-    q_target = config["ocp"]["q_target"]
+    q_target = config["OCP"]["q_target"]
 
-    theta, theta_dot = x[0], x[1]
+    theta, theta_dot = x[0], x[1] # Optional, done for algebraic clarity sake
     s_cost_SP = (theta - q_target)**2 + 0.1 * theta_dot**2 + 0.01*u**2
 
     return s_cost_SP
 
-# TERMINAL COST
-def terrminal_cost_SP(x, q_target):
+# Terminal cost
+def terrminal_cost_SP(x):
     '''
     Terminal cost for single pendulum
     '''
-    config = load_config()
-    q_target = config["ocp"]["q_target"]
+    q_target = config["OCP"]["q_target"]
 
     theta, theta_dot = x[0], x[1]
     t_cost_SP = (theta - q_target)**2 + 0.1 * theta_dot**2
@@ -32,17 +36,15 @@ def terrminal_cost_SP(x, q_target):
     return t_cost_SP
 
 # --------------------------------------------------------------------------------
-# Double Pendulum Cost Functions
+# DOUBLE PENDULUM
 # --------------------------------------------------------------------------------
-# STAGE COST
+# Stage cost (quadratic cost)
 def stage_cost_double(x, u):
-    '''
-    Quadratic cost for double pendulum
-    '''
+
     s_cost_DP = ca.sumsqr(x) * 0.1 * ca.sumsqr(u)
     return s_cost_DP
 
-# TERMINAL COST
+# Terminal cost
 def terminal_cost_double(x):
     t_cost_DP = ca.sumsqr(x)
     return t_cost_DP
