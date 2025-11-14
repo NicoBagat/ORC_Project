@@ -2,7 +2,7 @@
 import casadi as ca
 
 # LOCAL IMPORTS
-from utils.py import load_config    
+from src.utils import load_config    
 
 # Load from configuration file
 config = load_config() 
@@ -24,7 +24,7 @@ def stage_cost_SP(x, u):
     return s_cost_SP
 
 # Terminal cost
-def terrminal_cost_SP(x):
+def terminal_cost_SP(x):
     '''
     Terminal cost for single pendulum
     '''
