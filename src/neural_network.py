@@ -1,16 +1,29 @@
-import torch 
+# PYTHON LIBRARIES
+import torch
 import torch.nn as nn
-from src.utils import load_config
 
-class NeuralNetwork(nn.Module):
-    def __init__(self, nn_input, nn_hidden_dim, nn_output_dim, activation=nn.ReLU(), ub=1):
-        
-        def forward(self, x):
-        
-        def initialize_weights(self):
-            
-         @classmethod
-         def from_config(cls, config_path):
-             
-             config=load_config(config_path)
-             input_size = config["ocp"]
+class SP_NNmodel(nn.Module):
+    """Single Pendulum NN"""
+    def __init__(self):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(2, 64), nn.ReLU(),    # Input layer
+            nn.Linear(64, 64), nn.ReLU(),   # Hidden layers
+            nn.Linear(64, 1)                # Output layer
+        )
+    
+    def forwars(self, x):
+        return self.net(x)
+
+class DP_NNmodel(nn.Module):
+    """Double Pendulum NN"""
+    def __init__(self):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(4, 128), nn.ReLU(),   # Input layer
+            nn.Linear(128, 128), nn.ReLU(), # Hidden layers
+            nn.Linear(128, 1)               # Output layer
+        )
+    
+    def forward(self, x):
+        return self.net(x)
