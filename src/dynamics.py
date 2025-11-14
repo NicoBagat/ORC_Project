@@ -1,6 +1,6 @@
 import casadi as ca
 
-from utils.py import load_config
+from src.utils import load_config
 
 # --------------------------------------------------------------------------------
 # Single Pendulum Dynamics
